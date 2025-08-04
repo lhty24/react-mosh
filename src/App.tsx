@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { BsFillCalendarFill } from "react-icons/bs";
 import Button from "./components/Button/Button";
+import Like from "./components/Like";
 
 function App() {
   return (
     <div>
-      <Button onClick={() => {}}>sup fam</Button>
+      <Like onClick={() => console.log("clicked")} />
     </div>
   );
 }
