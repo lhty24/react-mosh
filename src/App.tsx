@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { BsFillCalendarFill } from "react-icons/bs";
-import Button from "./components/Button/Button";
-import Like from "./components/Like";
+import { useState } from "react";
 
 function App() {
-  return (
-    <div>
-      <Like onClick={() => console.log("clicked")} />
-    </div>
-  );
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  const [person, setPerson] = useState({
+    firstName: "",
+    lastName: "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  return <div></div>;
 }
 
 export default App;
