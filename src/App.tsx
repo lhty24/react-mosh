@@ -1,34 +1,20 @@
 import { useState } from "react";
 import produce from "immer";
+import NavBar from "./components/NavBar";
+import Cart from "./components/Cart";
 
 function App() {
-  const [bugs, setBugs] = useState([
-    { id: 1, title: "bug 1", fixed: false },
-    { id: 2, title: "bug 2", fixed: false },
-  ]);
-
-  const handleClick = () => {
-    // setBugs(bug.map((bug) => (bug.id === 1 ? { ...bug, fixed: true } : bug)));
-
-    // use immer
-    // "draft" a proxy object that records the changes we are going to apply to the bugs array
-    // image draft is a copy of the bugs array, you are free to mutate or modify just like a regular JS object
-    setBugs(
-      produce((draft) => {
-        const bug = draft.find((bug) => bug.id === 1);
-        if (bug) bug.fixed = true;
-      })
-    );
+  // principle: the component holding the state is the one responsible for updating it
+  // that's why we clear cartItems on the App level not the Cart level
+  const [cartItems, setCartItems] = useState(["Product1", "Product2"]);
+  const handleClear = () => {
+    setCartItems([]);
   };
 
   return (
     <div>
-      {bugs.map((bug) => (
-        <p key={bug.id}>
-          {bug.title} {bug.fixed ? "Fixed" : "New"}
-        </p>
-      ))}
-      <button onClick={handleClick}>Update</button>
+      <NavBar cartItemsCount={cartItems.length} />
+      <Cart cartItems={cartItems} onClear={handleClear} />
     </div>
   );
 }
