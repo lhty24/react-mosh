@@ -1,25 +1,28 @@
 import { useState } from "react";
 
 function App() {
-  const [drink, setDrink] = useState({
-    title: "Coffee",
-    price: 5,
+  const [customer, setCustomer] = useState({
+    name: "John",
+    address: {
+      city: "Toronto",
+      zipCode: 111111,
+    },
   });
 
+  // the spread operator is shallow
+  // make sure the new state object is completely independent of the old state object, they don't share anything
+  // set address to a new object
   const handleClick = () => {
-    const newDrink = {
-      ...drink,
-      price: 6,
-    };
-
-    // setDrink({ ...drink, price: 6 });
-    setDrink(newDrink);
+    setCustomer({
+      ...customer,
+      address: { ...customer.address, zipCode: 666666 },
+    });
   };
 
   return (
     <div>
-      {drink.price}
-      <button onClick={handleClick}>Update Price</button>
+      {customer.address.zipCode}
+      <button onClick={handleClick}>Update</button>
     </div>
   );
 }
