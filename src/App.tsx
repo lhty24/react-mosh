@@ -1,20 +1,24 @@
 import { useState } from "react";
-import produce from "immer";
-import NavBar from "./components/NavBar";
-import Cart from "./components/Cart";
 
 function App() {
-  // principle: the component holding the state is the one responsible for updating it
-  // that's why we clear cartItems on the App level not the Cart level
-  const [cartItems, setCartItems] = useState(["Product1", "Product2"]);
-  const handleClear = () => {
-    setCartItems([]);
+  const [game, setGame] = useState({
+    id: 1,
+    player: {
+      name: "John",
+    },
+  });
+
+  const handleClick = () => {
+    setGame({
+      ...game,
+      player: { ...game.player, name: "Mark" },
+    });
   };
 
   return (
     <div>
-      <NavBar cartItemsCount={cartItems.length} />
-      <Cart cartItems={cartItems} onClear={handleClear} />
+      {game.player.name}
+      <button onClick={handleClick}>Update Player Name</button>
     </div>
   );
 }
