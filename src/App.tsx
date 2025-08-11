@@ -1,22 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import ProductList from "./components/ProductList";
+import { useEffect } from "react";
+
+const connect = () => console.log("Connecting");
+const disconnect = () => console.log("Disconnecting");
 
 const App = () => {
-  const [category, setCategory] = useState("");
+  useEffect(() => {
+    connect();
 
-  return (
-    <div>
-      <select
-        className="form-select"
-        onChange={(event) => setCategory(event.target.value)}
-      >
-        <option value=""></option>
-        <option value="Clothing">Clothing</option>
-        <option value="Household">Household</option>
-      </select>
-      <ProductList category={category} />
-    </div>
-  );
+    // the function passed to the effect hook can optionally return a function for clean up
+    // if choose to do so, the clean up function should undo whatever the effect was doing
+    return () => disconnect();
+  });
+
+  return <div></div>;
 };
 
 export default App;
