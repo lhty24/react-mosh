@@ -1,18 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const connect = () => console.log("Connecting");
-const disconnect = () => console.log("Disconnecting");
+// use typescript to add auto completion and type safety
+// so we dont access invalid properties
+interface User {
+  id: number;
+  name: string;
+}
 
-const App = () => {
+function App() {
+  const [users, setUsers] = useState<User[]>([]);
+
   useEffect(() => {
-    connect();
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users")
+      .then((res) => setUsers(res.data));
+  }, []);
 
-    // the function passed to the effect hook can optionally return a function for clean up
-    // if choose to do so, the clean up function should undo whatever the effect was doing
-    return () => disconnect();
-  });
-
-  return <div></div>;
-};
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
 
 export default App;
