@@ -14,6 +14,7 @@ function App() {
     // provide a cleanup function for cancelling the fetch request
     // AbortController: built in, allow cancelling async operations
     const controller = new AbortController();
+
     axios
       .get<User[]>("https://jsonplaceholder.typicode.com/users", {
         signal: controller.signal,
