@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, CanceledError } from "axios";
 
-// use typescript to add auto completion and type safety
-// so we dont access invalid properties
 interface User {
   id: number;
   name: string;
@@ -13,22 +11,20 @@ function App() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // get -> await promis -> res / err
-    // await requires async
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        setUsers(res.data);
-      } catch (err) {
-        // type annotation is not allowed in catch clause
-        // use 'as' as a work around - type assertion
-        setError((err as AxiosError).message);
-      }
-    };
+    // provide a cleanup function for cancelling the fetch request
+    // AbortController: built in, allow cancelling async operations
+    const controller = new AbortController();
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+        signal: controller.signal,
+      })
+      .then((res) => setUsers(res.data))
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+      });
 
-    fetchUsers();
+    return () => controller.abort();
   }, []);
 
   return (
