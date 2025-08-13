@@ -32,8 +32,6 @@ function App() {
     return () => controller.abort();
   }, []);
 
-  // Optimistic vs Pessimistic apporoach
-  // choosing Optimistic
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
@@ -44,14 +42,31 @@ function App() {
         setError(err.message);
         setUsers(originalUsers);
       });
-    // call the server to persist the changes
-    // set the page back to its original state if there's an error
+  };
+
+  const addUser = () => {
+    const originalUsers = [...users];
+    const newUser = { id: 0, name: "Mosh" };
+    setUsers([newUser, ...users]);
+
+    axios
+      .post("https://jsonplaceholder.typicode.com/users", newUser)
+      .then((res) => setUsers([res.data, ...users]))
+      // just a diff way of writing this code - destructring response
+      // .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
   };
 
   return (
     <>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && <div className="spinner-border"></div>}
+      <button className="btn btn-primary mb-3" onClick={addUser}>
+        Add
+      </button>
       <ul className="list-group">
         {users.map((user) => (
           <li
