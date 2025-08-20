@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError, CanceledError } from "axios";
+// import { CanceledError } from "axios";
+import apiClient, { CanceledError } from "./services/api-client";
 
 interface User {
   id: number;
@@ -15,8 +16,8 @@ function App() {
     const controller = new AbortController();
 
     setLoading(true);
-    axios
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+    apiClient
+      .get<User[]>("/users", {
         signal: controller.signal,
       })
       .then((res) => {
@@ -36,12 +37,10 @@ function App() {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
 
-    axios
-      .delete("https://jsonplaceholder.typicode.com/users/" + user.id)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.delete("/users/" + user.id).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   const addUser = () => {
@@ -49,8 +48,8 @@ function App() {
     const newUser = { id: 0, name: "Mosh" };
     setUsers([newUser, ...users]);
 
-    axios
-      .post("https://jsonplaceholder.typicode.com/users", newUser)
+    apiClient
+      .post("/users", newUser)
       .then((res) => setUsers([res.data, ...users]))
       // just a diff way of writing this code - destructring response
       // .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
@@ -68,15 +67,10 @@ function App() {
     // HTTP
     // put: replacing object
     // patch: updating one or more properties
-    axios
-      .patch(
-        "https://jsonplaceholder.typicode.com/users/" + user.id,
-        updateUser
-      )
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.patch("/users/" + user.id, updateUser).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   return (
